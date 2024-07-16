@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { checkArticleId } = require("../utils/checkArticleId");
 
 exports.selectAllArticles = () => {
   return db
@@ -17,12 +18,27 @@ exports.selectAllArticles = () => {
 };
 
 exports.selectArticleById = (id) => {
-  return db
-    .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])
-    .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Article not found" });
-      }
-      return rows[0];
-    });
+  return checkArticleId(id).then(() => {
+    return db
+      .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])
+      .then(({ rows }) => {
+        return rows[0];
+      });
+  });
+};
+
+exports.selectCommentsByArticleId = (id) => {
+  return checkArticleId(id).then(() => {
+    return db
+      .query(`SELECT * FROM comments c WHERE c.article_id = $1;`, [id])
+      .then(({ rows }) => {
+        if (rows.length === 0) {
+          return Promise.reject({
+            status: 404,
+            msg: "No comments found",
+          });
+        }
+        return rows;
+      });
+  });
 };

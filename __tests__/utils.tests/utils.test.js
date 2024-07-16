@@ -3,6 +3,13 @@ const {
   createRef,
   formatComments,
 } = require("../../db/seeds/utils");
+const data = require("../../db/data/test-data/index.js");
+const db = require("../../db/connection.js");
+const seed = require("../../db/seeds/seed.js");
+const { checkArticleId } = require("../../utils/checkArticleId.js");
+
+beforeAll(() => seed(data));
+afterAll(() => db.end());
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -100,5 +107,19 @@ describe("formatComments", () => {
     const comments = [{ created_at: timestamp }];
     const formattedComments = formatComments(comments, {});
     expect(formattedComments[0].created_at).toEqual(new Date(timestamp));
+  });
+});
+
+describe("checkArticleId", () => {
+  test("Returns true if article_id exists", () => {
+    checkArticleId(1).then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if article_id doesnt exist", () => {
+    checkArticleId(900).then((result) => {
+      expect(result.msg).toBe("invalid article id");
+    });
   });
 });

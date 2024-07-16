@@ -42,5 +42,47 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an article by id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "article": {
+        "article_id": 5,
+        "title": "Please stop worrying about Angular 3",
+        "topic": "coding",
+        "author": "jessjelly",
+        "body": "Some text...",
+        "created_at": "2020-04-21T16:06:00.000Z",
+        "votes": 0,
+        "article_img_url": "https://images.com/14011035"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves all comments for an article by id",
+    "queries": [],
+    "format": "Array",
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 21,
+          "body": "Some text...",
+          "article_id": 6,
+          "author": "tickle122",
+          "votes": 3,
+          "created_at": "2020-02-05T12:15:00.000Z"
+        },
+        {
+          "comment_id": 55,
+          "body": "More text...",
+          "article_id": 6,
+          "author": "jessjelly",
+          "votes": -3,
+          "created_at": "2020-01-16T23:20:00.000Z"
+        }
+      ]
+    }
   }
 }

@@ -4,6 +4,7 @@ const { getEndpoints } = require("../controllers/endpoints.controllers");
 const {
   getArticleById,
   getArticles,
+  getCommentsByArticleId,
 } = require("../controllers/articles.controllers");
 const app = express();
 
@@ -14,6 +15,8 @@ app.get("/api", getEndpoints);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:id", getArticleById);
+
+app.get("/api/articles/:id/comments", getCommentsByArticleId);
 
 app.use((err, req, res, next) => {
   if (err.code === "23502" || err.code === "22P02") {
