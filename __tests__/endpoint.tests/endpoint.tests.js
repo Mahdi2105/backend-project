@@ -85,4 +85,56 @@ describe("articles", () => {
         expect(response.body.msg).toBe("Bad request");
       });
   });
+
+  test("GET:200 sends an array of articles", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.articles)).toBe(true);
+        expect(body.articles.length).toBe(5);
+      });
+  });
+
+  test("GET:200 returns article with comment count", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles[0]).toMatchObject({
+          article_id: 3,
+          author: "icellusedkars",
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: "2",
+        });
+      });
+  });
+
+  test("GET:200 all articles have required properties", () => {
+    const properties = [
+      "article_id",
+      "author",
+      "title",
+      "topic",
+      "created_at",
+      "votes",
+      "article_img_url",
+      "comment_count",
+    ];
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          properties.forEach((prop) => {
+            expect(prop in article).toBe(true);
+          });
+        });
+      });
+  });
 });
