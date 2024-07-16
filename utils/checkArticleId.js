@@ -13,7 +13,7 @@ exports.checkArticleId = (id) => {
       if (response.rows.length === 1) {
         return true;
       } else {
-        return Promise.reject({ status: 404, msg: "invalid article id" });
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
     });
 };

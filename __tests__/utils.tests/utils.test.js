@@ -112,14 +112,15 @@ describe("formatComments", () => {
 
 describe("checkArticleId", () => {
   test("Returns true if article_id exists", () => {
-    checkArticleId(1).then((result) => {
+    return checkArticleId(1).then((result) => {
       expect(result).toBe(true);
     });
   });
 
   test("404 Returns error if article_id doesnt exist", () => {
-    checkArticleId(900).then((result) => {
-      expect(result.msg).toBe("invalid article id");
+    return expect(checkArticleId(900)).rejects.toEqual({
+      msg: "Not found",
+      status: 404,
     });
   });
 });
