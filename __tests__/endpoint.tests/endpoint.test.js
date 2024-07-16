@@ -126,12 +126,12 @@ describe("articles", () => {
         });
     });
 
-    test("GET:404 sends an error message for an invalid id", () => {
+    test("GET:404 sends an error message for a non-existant id", () => {
       return request(app)
         .get("/api/articles/3487")
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("invalid article id");
+          expect(response.body.msg).toBe("Not found");
         });
     });
 
@@ -164,12 +164,13 @@ describe("articles", () => {
           });
         });
     });
-    test("GET:404 returns error if article exists but no comments are linked", () => {
+
+    test("GET:200 returns empty array if article exists but no comments are linked", () => {
       return request(app)
         .get("/api/articles/2/comments")
-        .expect(404)
+        .expect(200)
         .then(({ body }) => {
-          expect(body.msg).toBe("No comments found");
+          expect(body.comments).toEqual([]);
         });
     });
 
@@ -178,7 +179,16 @@ describe("articles", () => {
         .get("/api/articles/100/comments")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("invalid article id");
+          expect(body.msg).toBe("Not found");
+        });
+    });
+
+    test("GET:404 returns error if article_id does not exist", () => {
+      return request(app)
+        .get("/api/articles/not-a-number/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request");
         });
     });
   });

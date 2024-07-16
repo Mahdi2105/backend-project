@@ -32,12 +32,6 @@ exports.selectCommentsByArticleId = (id) => {
     return db
       .query(`SELECT * FROM comments c WHERE c.article_id = $1;`, [id])
       .then(({ rows }) => {
-        if (rows.length === 0) {
-          return Promise.reject({
-            status: 404,
-            msg: "No comments found",
-          });
-        }
         return rows;
       });
   });
