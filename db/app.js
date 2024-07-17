@@ -23,7 +23,8 @@ app.get("/api/articles/:id/comments", getCommentsByArticleId);
 app.post("/api/articles/:id/comments", postCommentByArticleId);
 
 app.use((err, req, res, next) => {
-  if (err.code === "23502" || err.code === "22P02") {
+  if (err.code === "23502" || err.code === "22P02" || err.code === "23503") {
+    console.log(err, "IN IF");
     res.status(400).send({ msg: "Bad request" });
   }
   next(err);
@@ -31,13 +32,13 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
+    console.log("IN CUSTOM ERR");
     res.status(err.status).send({ msg: err.msg });
   }
   next(err);
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
   res.status(500).send({ msg: "Internal Server Error" });
 });
 

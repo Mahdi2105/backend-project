@@ -7,6 +7,7 @@ const data = require("../../db/data/test-data/index.js");
 const db = require("../../db/connection.js");
 const seed = require("../../db/seeds/seed.js");
 const { checkArticleId } = require("../../utils/checkArticleId.js");
+const { checkUser } = require("../../utils/checkUser.js");
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -121,6 +122,26 @@ describe("checkArticleId", () => {
     return expect(checkArticleId(900)).rejects.toEqual({
       status: 404,
       msg: "Not found",
+    });
+  });
+});
+
+describe("checkUser", () => {
+  test("Returns true if username exists", () => {
+    return checkUser("lurker").then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if username doesnt exist", () => {
+    return checkUser("Mahdi").then((result) => {
+      expect(result).toBe(false);
+    });
+  });
+
+  test("404 Returns error if username is not a string", () => {
+    return checkUser(3453).then((result) => {
+      expect(result).toBe(false);
     });
   });
 });
