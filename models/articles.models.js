@@ -1,5 +1,6 @@
 const db = require("../db/connection");
 const { checkArticleId } = require("../utils/checkArticleId");
+const { checkUser } = require("../utils/checkUser");
 
 exports.selectAllArticles = () => {
   return db
@@ -45,6 +46,9 @@ exports.insertCommentByArticleId = (id, commentBody) => {
   }
 
   return checkArticleId(id)
+    .then(() => {
+      checkUser(username);
+    })
     .then(() => {
       return db.query(
         `

@@ -194,7 +194,7 @@ describe("articles", () => {
   });
 
   describe("POST comments by article_id", () => {
-    test("POST: 200 returns the posted comment", () => {
+    test("POST: 201 returns the posted comment", () => {
       return request(app)
         .post("/api/articles/1/comments")
         .send({
@@ -204,6 +204,29 @@ describe("articles", () => {
         .expect(201)
         .then(({ body }) => {
           expect(body.comment).toMatchObject({
+            comment_id: expect.any(Number),
+            body: "Something really interesting",
+            article_id: 1,
+            author: "lurker",
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          });
+        });
+    });
+
+    test.only("POST: 201 ignores extra properties", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send({
+          username: "lurker",
+          body: "Something really interesting",
+          age: 27,
+          hobbies: "Hiking",
+        })
+        .expect(201)
+        .then(({ body }) => {
+          console.log(body.comment);
+          expect(body.comment).toEqual({
             comment_id: expect.any(Number),
             body: "Something really interesting",
             article_id: 1,
@@ -254,6 +277,19 @@ describe("articles", () => {
       return request(app)
         .post("/api/articles/1/comments")
         .send({
+          body: "Something really interesting",
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request");
+        });
+    });
+
+    test("POST:400 returns error if username does not exist", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send({
+          username: "Mahdi",
           body: "Something really interesting",
         })
         .expect(400)
