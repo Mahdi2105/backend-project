@@ -1,7 +1,6 @@
 const db = require(`../db/connection`);
 
 exports.checkUser = (username) => {
-  console.log("HELLO");
   return db
     .query(
       `
@@ -14,7 +13,7 @@ exports.checkUser = (username) => {
       if (response.rows.length === 1) {
         return true;
       } else {
-        return false;
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
     });
 };

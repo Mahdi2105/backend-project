@@ -3,6 +3,7 @@ const {
   selectAllArticles,
   selectCommentsByArticleId,
   insertCommentByArticleId,
+  patchArticle,
 } = require("../models/articles.models");
 
 exports.getArticles = (req, res, next) => {
@@ -37,6 +38,18 @@ exports.getCommentsByArticleId = (req, res, next) => {
     });
 };
 
+exports.updateArticle = (req, res, next) => {
+  const id = req.params.id;
+  const voteInc = req.body.inc_votes;
+  patchArticle(id, voteInc)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 exports.postCommentByArticleId = (req, res, next) => {
   const id = req.params.id;
   const commentBody = req.body;
@@ -45,7 +58,6 @@ exports.postCommentByArticleId = (req, res, next) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };

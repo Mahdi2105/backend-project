@@ -6,6 +6,7 @@ const {
   getArticles,
   getCommentsByArticleId,
   postCommentByArticleId,
+  updateArticle,
 } = require("../controllers/articles.controllers");
 const app = express();
 app.use(express.json());
@@ -22,9 +23,10 @@ app.get("/api/articles/:id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:id/comments", postCommentByArticleId);
 
+app.patch("/api/articles/:id", updateArticle);
+
 app.use((err, req, res, next) => {
   if (err.code === "23502" || err.code === "22P02" || err.code === "23503") {
-    console.log(err, "IN IF");
     res.status(400).send({ msg: "Bad request" });
   }
   next(err);
@@ -32,7 +34,6 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
-    console.log("IN CUSTOM ERR");
     res.status(err.status).send({ msg: err.msg });
   }
   next(err);

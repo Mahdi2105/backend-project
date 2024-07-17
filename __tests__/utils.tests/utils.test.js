@@ -3,13 +3,10 @@ const {
   createRef,
   formatComments,
 } = require("../../db/seeds/utils");
-const data = require("../../db/data/test-data/index.js");
 const db = require("../../db/connection.js");
-const seed = require("../../db/seeds/seed.js");
 const { checkArticleId } = require("../../utils/checkArticleId.js");
 const { checkUser } = require("../../utils/checkUser.js");
 
-beforeAll(() => seed(data));
 afterAll(() => db.end());
 
 describe("convertTimestampToDate", () => {
@@ -134,14 +131,16 @@ describe("checkUser", () => {
   });
 
   test("404 Returns error if username doesnt exist", () => {
-    return checkUser("Mahdi").then((result) => {
-      expect(result).toBe(false);
+    return expect(checkUser("Mahdi")).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
     });
   });
 
   test("404 Returns error if username is not a string", () => {
-    return checkUser(3453).then((result) => {
-      expect(result).toBe(false);
+    return expect(checkUser(4369)).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
     });
   });
 });
