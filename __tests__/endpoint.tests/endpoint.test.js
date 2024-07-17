@@ -6,7 +6,7 @@ const request = require("supertest");
 const fs = require("fs/promises");
 const path = require("path");
 
-beforeAll(() => seed(data));
+beforeEach(() => seed(data));
 afterAll(() => db.end());
 
 describe("/api", () => {
@@ -214,7 +214,7 @@ describe("articles", () => {
         });
     });
 
-    test.only("POST: 201 ignores extra properties", () => {
+    test("POST: 201 ignores extra properties", () => {
       return request(app)
         .post("/api/articles/1/comments")
         .send({
@@ -225,7 +225,6 @@ describe("articles", () => {
         })
         .expect(201)
         .then(({ body }) => {
-          console.log(body.comment);
           expect(body.comment).toEqual({
             comment_id: expect.any(Number),
             body: "Something really interesting",
@@ -285,12 +284,90 @@ describe("articles", () => {
         });
     });
 
-    test("POST:400 returns error if username does not exist", () => {
+    test("POST:404 returns error if username does not exist", () => {
       return request(app)
         .post("/api/articles/1/comments")
         .send({
           username: "Mahdi",
           body: "Something really interesting",
+        })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not found");
+        });
+    });
+  });
+
+  describe("PATCH update votes by articleId", () => {
+    test("PATCH:200 returns updated article with increased votes", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({
+          inc_votes: 10,
+        })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).toMatchObject({
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: expect.any(String),
+            votes: 110,
+            article_img_url: expect.any(String),
+          });
+        });
+    });
+
+    test("PATCH:200 returns updated article with decreased votes", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({
+          inc_votes: -10,
+        })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).toMatchObject({
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: expect.any(String),
+            votes: 90,
+            article_img_url: expect.any(String),
+          });
+        });
+    });
+
+    test("PATCH:404 returns error if article_id does not exist", () => {
+      return request(app)
+        .patch("/api/articles/100")
+        .send({
+          inc_votes: -10,
+        })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not found");
+        });
+    });
+
+    test("PATCH:400 returns error if article_id is not a number", () => {
+      return request(app)
+        .patch("/api/articles/not-a-number")
+        .send({
+          inc_votes: -10,
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request");
+        });
+    });
+
+    test("PATCH:400 returns error inc_votes is not a number", () => {
+      return request(app)
+        .patch("/api/articles/not-a-number")
+        .send({
+          inc_votes: "Hello",
         })
         .expect(400)
         .then(({ body }) => {

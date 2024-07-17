@@ -1,6 +1,7 @@
 const db = require("../db/connection");
 const { checkArticleId } = require("../utils/checkArticleId");
 const { checkUser } = require("../utils/checkUser");
+const { getVotes } = require("../utils/getVote");
 
 exports.selectAllArticles = () => {
   return db
@@ -38,6 +39,27 @@ exports.selectCommentsByArticleId = (id) => {
   });
 };
 
+exports.patchArticle = (id, voteInc) => {
+  return checkArticleId(id)
+    .then(() => {
+      return getVotes(id);
+    })
+    .then((votes) => {
+      const newVote = votes + voteInc;
+      return db.query(
+        `
+      UPDATE articles 
+      SET votes = $1 
+      WHERE article_id = $2
+      RETURNING *;`,
+        [newVote, id]
+      );
+    })
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+
 exports.insertCommentByArticleId = (id, commentBody) => {
   const { username, body } = commentBody;
 
@@ -47,7 +69,7 @@ exports.insertCommentByArticleId = (id, commentBody) => {
 
   return checkArticleId(id)
     .then(() => {
-      checkUser(username);
+      return checkUser(username);
     })
     .then(() => {
       return db.query(
