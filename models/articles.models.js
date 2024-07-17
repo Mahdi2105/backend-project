@@ -36,3 +36,26 @@ exports.selectCommentsByArticleId = (id) => {
       });
   });
 };
+
+exports.insertCommentByArticleId = (id, commentBody) => {
+  const { username, body } = commentBody;
+
+  if (!username || !body) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+
+  return checkArticleId(id)
+    .then(() => {
+      return db.query(
+        `
+      INSERT INTO comments
+      (author, body, article_id)
+      VALUES ($1,$2,$3)
+      RETURNING *;`,
+        [username, body, id]
+      );
+    })
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};

@@ -119,8 +119,8 @@ describe("checkArticleId", () => {
 
   test("404 Returns error if article_id doesnt exist", () => {
     return expect(checkArticleId(900)).rejects.toEqual({
-      msg: "Not found",
       status: 404,
+      msg: "Not found",
     });
   });
 });
