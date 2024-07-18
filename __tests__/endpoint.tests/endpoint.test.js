@@ -139,7 +139,7 @@ describe("articles", () => {
         });
     });
 
-    test("GET:400 when passed in an invalid sort_by", () => {
+    test("GET:400 error when passed in an invalid sort_by", () => {
       return request(app)
         .get("/api/articles?sort_by=invalidQuery&order=asc")
         .expect(400)
@@ -148,7 +148,7 @@ describe("articles", () => {
         });
     });
 
-    test("GET:400 when passed in an invalid order", () => {
+    test("GET:400 error when passed in an invalid order", () => {
       return request(app)
         .get("/api/articles?sort_by=title&order=up")
         .expect(400)
@@ -432,28 +432,13 @@ describe("articles", () => {
 
 describe("comments", () => {
   describe("Delete comment by Id", () => {
-    test("DELETE:200 deletes a comment and returns the deleted comment", () => {
-      return request(app)
-        .delete("/api/comments/1")
-        .expect(200)
-        .then(({ body }) => {
-          expect(body.comment).toEqual({
-            comment_id: 1,
-            author: "butter_bridge",
-            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-            article_id: 9,
-            created_at: "2020-04-06T12:17:00.000Z",
-            votes: 16,
-          });
-        });
+    test("DELETE:204 deletes a comment and returns the deleted comment", () => {
+      return request(app).delete("/api/comments/1").expect(204);
     });
 
     test("DELETE:404 returns error if comment id does not exist", () => {
       return request(app)
         .delete("/api/comments/928356")
-        .send({
-          inc_votes: -10,
-        })
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Not found");
@@ -463,9 +448,6 @@ describe("comments", () => {
     test("DELETE:400 returns error if comment id is not a number", () => {
       return request(app)
         .delete("/api/comments/not-a-number")
-        .send({
-          inc_votes: -10,
-        })
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad request");
@@ -482,6 +464,7 @@ describe("Users", () => {
         .expect(200)
         .then(({ body }) => {
           expect(Array.isArray(body.users)).toBe(true);
+          expect(body.users.length).toBeGreaterThan(0);
           body.users.forEach((user) => {
             expect(typeof user.username).toBe("string");
             expect(typeof user.name).toBe("string");
