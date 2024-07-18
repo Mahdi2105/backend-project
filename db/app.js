@@ -32,6 +32,7 @@ app.patch("/api/articles/:id", updateArticle);
 app.delete("/api/comments/:id", removeComment);
 
 app.use((err, req, res, next) => {
+  console.log(err);
   if (err.code === "23502" || err.code === "22P02" || err.code === "23503") {
     res.status(400).send({ msg: "Bad request" });
   }

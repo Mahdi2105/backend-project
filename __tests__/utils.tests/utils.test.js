@@ -7,6 +7,7 @@ const db = require("../../db/connection.js");
 const { checkArticleId } = require("../../utils/checkArticleId.js");
 const { checkUser } = require("../../utils/checkUser.js");
 const { checkCommentId } = require("../../utils/checkCommentId.js");
+const { checkTopic } = require("../../utils/checkTopic");
 
 afterAll(() => db.end());
 
@@ -164,6 +165,28 @@ describe("checkCommentId", () => {
     return expect(checkUser("4369")).rejects.toEqual({
       status: 404,
       msg: "Not found",
+    });
+  });
+});
+
+describe("checkTopics", () => {
+  test("Returns true if topic exists", () => {
+    return checkTopic("mitch").then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if topic doesnt exist", () => {
+    return expect(checkTopic("Not-A-Topic")).rejects.toEqual({
+      status: 404,
+      msg: "Topic not found",
+    });
+  });
+
+  test("404 Returns error if topic is not a string", () => {
+    return expect(checkTopic(4369)).rejects.toEqual({
+      status: 404,
+      msg: "Topic not found",
     });
   });
 });
