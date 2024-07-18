@@ -4,7 +4,7 @@ exports.removeComment = (req, res, next) => {
   const id = req.params.id;
   return deleteComment(id)
     .then((comment) => {
-      res.status(200).send({ comment });
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);
