@@ -116,6 +116,48 @@ describe("articles", () => {
     });
   });
 
+  describe("GET all articles with queries", () => {
+    test("GET: 200 articles are sorted by created_at desc by default", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
+
+    test("GET:200 articles are sorted by valid property and valid order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toBeSortedBy("author", {
+            ascending: true,
+          });
+        });
+    });
+
+    test("GET:400 when passed in an invalid sort_by", () => {
+      return request(app)
+        .get("/api/articles?sort_by=invalidQuery&order=asc")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Please enter a valid query");
+        });
+    });
+
+    test("GET:400 when passed in an invalid order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=up")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Please enter a valid query");
+        });
+    });
+  });
+
   describe("GET articles by article_id", () => {
     test("GET:200 sends an article with entered id to the client", () => {
       return request(app)
