@@ -376,3 +376,47 @@ describe("articles", () => {
     });
   });
 });
+
+describe("comments", () => {
+  describe("Delete comment by Id", () => {
+    test("DELETE:200 deletes a comment and returns the deleted comment", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comment).toEqual({
+            comment_id: 1,
+            author: "butter_bridge",
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            article_id: 9,
+            created_at: "2020-04-06T12:17:00.000Z",
+            votes: 16,
+          });
+        });
+    });
+
+    test("DELETE:404 returns error if comment id does not exist", () => {
+      return request(app)
+        .delete("/api/comments/928356")
+        .send({
+          inc_votes: -10,
+        })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not found");
+        });
+    });
+
+    test("DELETE:400 returns error if comment id is not a number", () => {
+      return request(app)
+        .delete("/api/comments/not-a-number")
+        .send({
+          inc_votes: -10,
+        })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request");
+        });
+    });
+  });
+});

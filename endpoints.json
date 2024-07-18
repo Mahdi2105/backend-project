@@ -84,5 +84,52 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a comment based on article id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 301,
+        "body": "1",
+        "article_id": 2,
+        "author": "tickle122",
+        "votes": 0,
+        "created_at": "2024-07-17T15:03:16.465Z"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates the votes on an article by id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Running a Node App",
+        "topic": "coding",
+        "author": "jessjelly",
+        "body": "Some body....",
+        "created_at": "2020-11-07T06:03:00.000Z",
+        "votes": 100,
+        "article_img_url": "https://images.pexels.com/photos/11035380"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes an existing comment by id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 4,
+        "body": "some body....",
+        "article_id": 18,
+        "author": "happyamy2016",
+        "votes": 4,
+        "created_at": "2020-10-10T22:03:00.000Z"
+      }
+    }
   }
 }
