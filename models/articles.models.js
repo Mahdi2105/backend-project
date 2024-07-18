@@ -1,9 +1,10 @@
 const db = require("../db/connection");
 const { checkArticleId } = require("../utils/checkArticleId");
+const { checkTopic } = require("../utils/checkTopic");
 const { checkUser } = require("../utils/checkUser");
 const { getVotes } = require("../utils/getVote");
 
-exports.selectAllArticles = (sort_by = "created_at", order = "desc") => {
+exports.selectAllArticles = (sort_by = "created_at", order = "desc", topic) => {
   const validQueries = [
     "article_id",
     "author",
@@ -19,13 +20,30 @@ exports.selectAllArticles = (sort_by = "created_at", order = "desc") => {
   if (!validQueries.includes(sort_by) || !validOrder.includes(order)) {
     return Promise.reject({ status: 400, msg: "Please enter a valid query" });
   }
+
+  const topicArray = [];
+
   let sqlString = `SELECT a.article_id, a.author, a.title, a.topic, a.created_at, a.votes, a.article_img_url,
     COUNT(c.article_id) AS comment_count
     FROM articles a 
-    JOIN comments c ON a.article_id = c.article_id
+    JOIN comments c ON a.article_id = c.article_id `;
+
+  if (topic) {
+    sqlString += `WHERE topic = $1 `;
+    topicArray.push(topic);
+  }
+
+  sqlString += `
     GROUP BY a.article_id
     ORDER BY ${sort_by} ${order};`;
 
+  if (topic) {
+    return checkTopic(topic).then(() => {
+      return db.query(sqlString, topicArray).then(({ rows }) => {
+        return rows;
+      });
+    });
+  }
   return db.query(sqlString).then(({ rows }) => {
     return rows;
   });
