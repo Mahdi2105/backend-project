@@ -32,7 +32,10 @@ exports.selectArticleById = (id) => {
 exports.selectCommentsByArticleId = (id) => {
   return checkArticleId(id).then(() => {
     return db
-      .query(`SELECT * FROM comments c WHERE c.article_id = $1;`, [id])
+      .query(
+        `SELECT * FROM comments c WHERE c.article_id = $1 ORDER BY created_at DESC;`,
+        [id]
+      )
       .then(({ rows }) => {
         return rows;
       });

@@ -165,6 +165,17 @@ describe("articles", () => {
         });
     });
 
+    test("GET:200 comments are ordered by my recent first", () => {
+      return request(app)
+        .get("/api/articles/3/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
+
     test("GET:200 returns empty array if article exists but no comments are linked", () => {
       return request(app)
         .get("/api/articles/2/comments")
