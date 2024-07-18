@@ -6,6 +6,7 @@ const {
 const db = require("../../db/connection.js");
 const { checkArticleId } = require("../../utils/checkArticleId.js");
 const { checkUser } = require("../../utils/checkUser.js");
+const { checkCommentId } = require("../../utils/checkCommentId.js");
 
 afterAll(() => db.end());
 
@@ -139,6 +140,28 @@ describe("checkUser", () => {
 
   test("404 Returns error if username is not a string", () => {
     return expect(checkUser(4369)).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
+    });
+  });
+});
+
+describe("checkCommentId", () => {
+  test("Returns true if comment Id exists", () => {
+    return checkCommentId(2).then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if comment Id doesnt exist", () => {
+    return expect(checkUser(3284)).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
+    });
+  });
+
+  test("404 Returns error if comment Id is not a number", () => {
+    return expect(checkUser("4369")).rejects.toEqual({
       status: 404,
       msg: "Not found",
     });

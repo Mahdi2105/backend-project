@@ -8,6 +8,7 @@ const {
   postCommentByArticleId,
   updateArticle,
 } = require("../controllers/articles.controllers");
+const { removeComment } = require("../controllers/comments.controllers");
 const app = express();
 app.use(express.json());
 
@@ -24,6 +25,8 @@ app.get("/api/articles/:id/comments", getCommentsByArticleId);
 app.post("/api/articles/:id/comments", postCommentByArticleId);
 
 app.patch("/api/articles/:id", updateArticle);
+
+app.delete("/api/comments/:id", removeComment);
 
 app.use((err, req, res, next) => {
   if (err.code === "23502" || err.code === "22P02" || err.code === "23503") {
