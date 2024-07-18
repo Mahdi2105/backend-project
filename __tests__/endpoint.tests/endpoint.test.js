@@ -185,8 +185,17 @@ describe("articles", () => {
       return request(app)
         .get("/api/articles/1")
         .expect(200)
-        .then((response) => {
-          expect(response.body.article.article_id).toBe(1);
+        .then(({ body }) => {
+          expect(body.article.article_id).toBe(1);
+        });
+    });
+
+    test("GET:200 article includes comment count", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).hasOwnProperty("comment_count");
         });
     });
 
