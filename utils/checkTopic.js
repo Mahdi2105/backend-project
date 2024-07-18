@@ -10,7 +10,6 @@ exports.checkTopic = (topic) => {
       [topic]
     )
     .then((response) => {
-      console.log(response);
       if (response.rows.length > 0) {
         return true;
       } else {

@@ -52,7 +52,13 @@ exports.selectAllArticles = (sort_by = "created_at", order = "desc", topic) => {
 exports.selectArticleById = (id) => {
   return checkArticleId(id).then(() => {
     return db
-      .query(`SELECT * FROM articles WHERE article_id = $1;`, [id])
+      .query(
+        `SELECT COUNT(c.article_id) AS comment_count, a.* FROM articles a
+        JOIN comments c ON a.article_id = c.article_id
+        WHERE a.article_id = $1
+        GROUP BY a.article_id;`,
+        [id]
+      )
       .then(({ rows }) => {
         return rows[0];
       });
