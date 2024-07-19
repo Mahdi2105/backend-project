@@ -13,23 +13,22 @@ const { getUsers } = require("../controllers/users.controllers");
 const app = express();
 app.use(express.json());
 
-app.get("/api", getEndpoints);
+app.route("/api").get(getEndpoints);
 
-app.get("/api/topics", getTopics);
+app.route("/api/topics").get(getTopics);
 
-app.get("/api/users", getUsers);
+app.route("/api/users").get(getUsers);
 
-app.get("/api/articles", getArticles);
+app.route("/api/articles").get(getArticles);
 
-app.get("/api/articles/:id", getArticleById);
+app.route("/api/articles/:id").get(getArticleById).patch(updateArticle);
 
-app.get("/api/articles/:id/comments", getCommentsByArticleId);
+app.route("/api/comments/:id").delete(removeComment);
 
-app.post("/api/articles/:id/comments", postCommentByArticleId);
-
-app.patch("/api/articles/:id", updateArticle);
-
-app.delete("/api/comments/:id", removeComment);
+app
+  .route("/api/articles/:id/comments")
+  .get(getCommentsByArticleId)
+  .post(postCommentByArticleId);
 
 app.use((err, req, res, next) => {
   console.log(err);
