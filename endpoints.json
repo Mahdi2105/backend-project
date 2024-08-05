@@ -27,7 +27,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": ["topic", "sort_by", "order"],
     "format": "Array",
     "exampleResponse": {
       "articles": [
@@ -39,6 +39,114 @@
           "created_at": "2018-05-30T15:59:13.341Z",
           "votes": 0,
           "comment_count": 6
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an article by id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "article": {
+        "article_id": 5,
+        "title": "Please stop worrying about Angular 3",
+        "topic": "coding",
+        "author": "jessjelly",
+        "body": "Some text...",
+        "created_at": "2020-04-21T16:06:00.000Z",
+        "votes": 0,
+        "article_img_url": "https://images.com/14011035"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves all comments for an article by id",
+    "queries": [],
+    "format": "Array",
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 21,
+          "body": "Some text...",
+          "article_id": 6,
+          "author": "tickle122",
+          "votes": 3,
+          "created_at": "2020-02-05T12:15:00.000Z"
+        },
+        {
+          "comment_id": 55,
+          "body": "More text...",
+          "article_id": 6,
+          "author": "jessjelly",
+          "votes": -3,
+          "created_at": "2020-01-16T23:20:00.000Z"
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds a comment based on article id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 301,
+        "body": "1",
+        "article_id": 2,
+        "author": "tickle122",
+        "votes": 0,
+        "created_at": "2024-07-17T15:03:16.465Z"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates the votes on an article by id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Running a Node App",
+        "topic": "coding",
+        "author": "jessjelly",
+        "body": "Some body....",
+        "created_at": "2020-11-07T06:03:00.000Z",
+        "votes": 100,
+        "article_img_url": "https://images.pexels.com/photos/11035380"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes an existing comment by id",
+    "queries": [],
+    "format": "Object",
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 4,
+        "body": "some body....",
+        "article_id": 18,
+        "author": "happyamy2016",
+        "votes": 4,
+        "created_at": "2020-10-10T22:03:00.000Z"
+      }
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "format": "Array",
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        },
+        {
+          "username": "grumpy19",
+          "name": "Paul Grump",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/78/Mr-Grumpy-3A.PNG/revision/latest?cb=20170707233013"
         }
       ]
     }

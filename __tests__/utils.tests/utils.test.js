@@ -3,6 +3,13 @@ const {
   createRef,
   formatComments,
 } = require("../../db/seeds/utils");
+const db = require("../../db/connection.js");
+const { checkArticleId } = require("../../utils/checkArticleId.js");
+const { checkUser } = require("../../utils/checkUser.js");
+const { checkCommentId } = require("../../utils/checkCommentId.js");
+const { checkTopic } = require("../../utils/checkTopic");
+
+afterAll(() => db.end());
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -100,5 +107,86 @@ describe("formatComments", () => {
     const comments = [{ created_at: timestamp }];
     const formattedComments = formatComments(comments, {});
     expect(formattedComments[0].created_at).toEqual(new Date(timestamp));
+  });
+});
+
+describe("checkArticleId", () => {
+  test("Returns true if article_id exists", () => {
+    return checkArticleId(1).then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if article_id doesnt exist", () => {
+    return expect(checkArticleId(900)).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
+    });
+  });
+});
+
+describe("checkUser", () => {
+  test("Returns true if username exists", () => {
+    return checkUser("lurker").then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if username doesnt exist", () => {
+    return expect(checkUser("Mahdi")).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
+    });
+  });
+
+  test("404 Returns error if username is not a string", () => {
+    return expect(checkUser(4369)).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
+    });
+  });
+});
+
+describe("checkCommentId", () => {
+  test("Returns true if comment Id exists", () => {
+    return checkCommentId(2).then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if comment Id doesnt exist", () => {
+    return expect(checkUser(3284)).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
+    });
+  });
+
+  test("404 Returns error if comment Id is not a number", () => {
+    return expect(checkUser("4369")).rejects.toEqual({
+      status: 404,
+      msg: "Not found",
+    });
+  });
+});
+
+describe("checkTopics", () => {
+  test("Returns true if topic exists", () => {
+    return checkTopic("mitch").then((result) => {
+      expect(result).toBe(true);
+    });
+  });
+
+  test("404 Returns error if topic doesnt exist", () => {
+    return expect(checkTopic("Not-A-Topic")).rejects.toEqual({
+      status: 404,
+      msg: "Topic not found",
+    });
+  });
+
+  test("404 Returns error if topic is not a string", () => {
+    return expect(checkTopic(4369)).rejects.toEqual({
+      status: 404,
+      msg: "Topic not found",
+    });
   });
 });
