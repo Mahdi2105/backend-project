@@ -13,7 +13,7 @@ This is a simple project containing articles written by users and
 some comments. Each of the endpoints can be found in the 'app.js'
 file within the 'db' folder.
 
-HOST LINK: https://nc-project-0hto.onrender.com/
+HOST LINK: https://nc-project-0hto.onrender.com/api
 Here you can reach the endpoints to see the table results in the
 browser. e.g. https://nc-project-0hto.onrender.com/api/articles/1
 
