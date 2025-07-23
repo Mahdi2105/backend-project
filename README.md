@@ -22,7 +22,7 @@ https://github.com/Mahdi2105/backend-project
 
 After cloning, please follow these steps to complete the setup:
 
-1. Install dependencies (npm i should do the trick)
+1. Install dependencies ('npm i' in the terminal should do the trick)
 
 2. Create 2 .env files:
    -- .env.development --> and insert:
